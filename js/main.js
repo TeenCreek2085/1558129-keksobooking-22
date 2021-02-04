@@ -1,13 +1,13 @@
 'use strict'
 
-const APPARTAMENTS_COUNT = 10;
-const APPARTAMENTS_TYPES = ['bungalow', 'flat', 'house', 'palace'];
-const APPARTAMENTS_CHECK_IN = ['12:00', '13:00', '14:00'];
-const APPARTAMENTS_CHECK_OUT = ['12:00', '13:00', '14:00'];
-const APPARTAMENTS_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-const APPARTAMENTS_IMAGES = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg]'];
-const APPARTAMENTS_DESCRITIONS = 'Замечательные апартаменты';
-const APPARTAMENTS_TITLE = 'Отель в Красноярске';
+const APARTMENTS_COUNT = 10;
+const APARTMENTS_TYPES = ['bungalow', 'flat', 'house', 'palace'];
+const APARTMENTS_CHECK_IN = ['12:00', '13:00', '14:00'];
+const APARTMENTS_CHECK_OUT = ['12:00', '13:00', '14:00'];
+const APARTMENTS_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+const APARTMENTS_IMAGES = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg]'];
+const APARTMENTS_DESCRITIONS = 'Замечательные апартаменты';
+const APARTMENTS_TITLE = 'Отель в Красноярске';
 
 // Функция, проверяющее условие для диапазона
 const isRangeValid = (min, max) => min >= 0 && max >= 0 && max > min;
@@ -54,23 +54,23 @@ const getFillArray = (array, values) => {
 }
 
 // Функция, генерирующая объявление
-const createApartaments = () => {
+const createApartments = () => {
   return {
     author: {
       avatar: `img/avatars/user${getZeroFirst(getRandomInteger(0, 8))}.png`,
     },
     offer: {
-      title: APPARTAMENTS_TITLE,
+      title: APARTMENTS_TITLE,
       address: `${getRandomFloat(1, 100)}, ${getRandomFloat(1, 100)}`,
       price: getRandomInteger(100, 10000),
-      type: getRandomIndex(APPARTAMENTS_TYPES),
+      type: getRandomIndex(APARTMENTS_TYPES),
       rooms: getRandomInteger(1, 4),
       guests: getRandomInteger(1, 4),
-      checkin: getRandomIndex(APPARTAMENTS_CHECK_IN),
-      checkout: getRandomIndex(APPARTAMENTS_CHECK_OUT),
-      features: getFillArray(APPARTAMENTS_FEATURES, getRandomInteger(1, APPARTAMENTS_FEATURES.length)),
-      description: APPARTAMENTS_DESCRITIONS,
-      photos: getFillArray(APPARTAMENTS_IMAGES, getRandomInteger(1, APPARTAMENTS_IMAGES.length)),
+      checkin: getRandomIndex(APARTMENTS_CHECK_IN),
+      checkout: getRandomIndex(APARTMENTS_CHECK_OUT),
+      features: getFillArray(APARTMENTS_FEATURES, getRandomInteger(1, APARTMENTS_FEATURES.length)),
+      description: APARTMENTS_DESCRITIONS,
+      photos: getFillArray(APARTMENTS_IMAGES, getRandomInteger(1, APARTMENTS_IMAGES.length)),
     },
     location: {
       x: getRandomFloat(35.65000, 35.70000),
@@ -80,5 +80,5 @@ const createApartaments = () => {
 };
 
 // Функция, создающая новый массив с объявлениями
-const similarAppartaments = new Array(APPARTAMENTS_COUNT).fill(null).map(() => createApartaments());
-similarAppartaments;
+const similarApartments = new Array(APARTMENTS_COUNT).fill(null).map(() => createApartments());
+similarApartments;
