@@ -6,8 +6,8 @@ const APARTMENTS_CHECK_IN = ['12:00', '13:00', '14:00'];
 const APARTMENTS_CHECK_OUT = ['12:00', '13:00', '14:00'];
 const APARTMENTS_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 const APARTMENTS_IMAGES = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg]'];
-const APARTMENTS_DESCRITIONS = 'Замечательные апартаменты';
-const APARTMENTS_TITLE = 'Отель в Красноярске';
+const APARTMENTS_DESCRITIONS = ['Замечательное место для приема гостей и релакса', 'Изысканный уют', 'Великолепные апартаменты в центре', 'Подходит как туристам, так и бизнесменам', 'Апартаменты полностью укомплектованы и недавно отремонтированы', 'Разрешено заселяться с домашними питомцами', 'Двуспальная кровать', 'Выход окон на парк', 'Компактность, практичность и экономия', 'Квартира с стеклянной лестницей'];
+const APARTMENTS_TITLE = ['Живите красиво уже сегодня','Бесконечная элегантность' , 'Роскошь, достойная султана', 'Дом под старину', 'Для взыскательных хозяев', 'Каждый уголок квартиры освещен светом добра и любви', 'Милая, уютная квартирка в центре города', 'Уютное гнездышко для молодоженов', 'Комфортная студия', 'Роскошный пентхаус', 'Апартаменты, в котором проживала знаменитость'];
 
 // Функция, проверяющее условие для диапазона
 const isRangeValid = (min, max) => min >= 0 && max >= 0 && max > min;
@@ -33,10 +33,7 @@ const getRandomFloat = (min, max, numbersAfterPoint = 1) => {
 
 // Функция, добавляющая ведущий 0
 const getZeroFirst = (number) => {
-  if (number < 10) {
-    return `0${number}`;
-  }
-  return number;
+  return number < 10 ? `0${number}` : number;
 }
 
 // Функция, находящая случайный индекс из массива
@@ -53,6 +50,16 @@ const getFillArray = (array, values) => {
   return newArray;
 }
 
+// Функция, перемешивающая элементы в массиве методом Фишера — Йетса
+const getShuffleArray = (array) => {
+  const shuffleArray = array.slice();
+  for (let i = shuffleArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffleArray[i], shuffleArray[j]] = [shuffleArray[j], shuffleArray[i]];
+  }
+  return shuffleArray;
+};
+
 // Функция, генерирующая объявление
 const createApartments = () => {
   return {
@@ -60,7 +67,7 @@ const createApartments = () => {
       avatar: `img/avatars/user${getZeroFirst(getRandomInteger(0, 8))}.png`,
     },
     offer: {
-      title: APARTMENTS_TITLE,
+      title: getRandomIndex(APARTMENTS_TITLE),
       address: `${getRandomFloat(1, 100)}, ${getRandomFloat(1, 100)}`,
       price: getRandomInteger(100, 10000),
       type: getRandomIndex(APARTMENTS_TYPES),
@@ -68,13 +75,13 @@ const createApartments = () => {
       guests: getRandomInteger(1, 4),
       checkin: getRandomIndex(APARTMENTS_CHECK_IN),
       checkout: getRandomIndex(APARTMENTS_CHECK_OUT),
-      features: getFillArray(APARTMENTS_FEATURES, getRandomInteger(1, APARTMENTS_FEATURES.length)),
-      description: APARTMENTS_DESCRITIONS,
-      photos: getFillArray(APARTMENTS_IMAGES, getRandomInteger(1, APARTMENTS_IMAGES.length)),
+      features: getFillArray(getShuffleArray(APARTMENTS_FEATURES), getRandomInteger(1, APARTMENTS_FEATURES.length)),
+      description: getRandomIndex(APARTMENTS_DESCRITIONS),
+      photos: getFillArray(getShuffleArray(APARTMENTS_IMAGES), getRandomInteger(1, APARTMENTS_IMAGES.length)),
     },
     location: {
-      x: getRandomFloat(35.65000, 35.70000),
-      y: getRandomFloat(139.70000, 139.80000),
+      x: getRandomFloat(35.65000, 35.70000, 2),
+      y: getRandomFloat(139.70000, 139.80000, 2),
     },
   };
 };
