@@ -1,1 +1,2 @@
-import './data.js';
+import {similarApartments} from './data.js';
+similarApartments;

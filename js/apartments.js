@@ -1,8 +1,6 @@
 import {getZeroFirst, getRandomIndex, getFillArray, getShuffleArray} from './utils.js';
 import {getRandomInteger, getRandomFloat} from './math.js';
 
-
-const APARTMENTS_COUNT = 10;
 const APARTMENTS_TYPES = ['bungalow', 'flat', 'house', 'palace'];
 const APARTMENTS_CHECK_IN = ['12:00', '13:00', '14:00'];
 const APARTMENTS_CHECK_OUT = ['12:00', '13:00', '14:00'];
@@ -37,5 +35,5 @@ const createApartments = () => {
   };
 };
 
-export {APARTMENTS_COUNT, createApartments};
+export {createApartments};
 
