@@ -1,110 +1,123 @@
-import {similarApartments} from './data.js'
+import {similarApartments} from './data.js';
 
-const mapCanvas = document.querySelector('#map-canvas');
-const cardPopup = document.querySelector('#card')
-  .content
-  .querySelector('.popup');
+// Функиця, создающая элементы
+const makeElement = (className, tagName, source) => {
+  const element = document.createElement(tagName);
+  element.classList.add(...className);
 
-const apartmentsItem = similarApartments.slice(0, 1);
+  if (source) {
+    element.src = source;
+  }
+  return element;
+};
+
+// // Проверка на содержимое
+// const safeRender = (el, value) => {
+//   if (value.nodeType != Node.TEXT_NODE) {
+//     el.textContent = value;
+//   } else {
+//     el.classList.add('hidden');
+//   }
+// };
+
+// Создание блока с ценой
+const createPriceElement = (card, offer) => {
+  const priceElement = card.querySelector('.popup__text--price');
+  const text = `${offer.price} ₽/ночь`;
+  offer.price ? priceElement.textContent = text : priceElement.classList.add('hidden');
+};
+
+// Блок с типом апартаментов
+const apartmentsType = {
+  'flat':  'Квартира',
+  'bungalow': 'Бунгало',
+  'house': 'Дом',
+  'palace': 'Дворец',
+};
+
+// Создание блока с количеством комнат
+const createCapacityElement = (card, offer) => {
+  const capacityElement = card.querySelector('.popup__text--capacity');
+  const text = `${offer.rooms} комнаты для ${offer.guests} гостей`;
+  (offer.rooms && offer.guests) ? capacityElement.textContent = text : capacityElement.classList.add('hidden');
+};
+
+// Создание блока с временем заезда/выезда
+const createTimeElement = (card, offer) => {
+  const timeElement = card.querySelector('.popup__text--time');
+  const text = `Заезд после ${offer.checkin} выезд до ${offer.checkout}`;
+  (offer.checkin && offer.checkout) ? timeElement.textContent = text : timeElement.classList.add('hidden');
+};
+
+// Создание блока с преимуществами
+const createFeaturesElement = (card, offer) => {
+  const features = card.querySelector('.popup__features');
+  features.innerHTML = '';
+
+  if (offer.features) {
+    offer.features.forEach(element => {
+      const featureClasses = ['popup__feature', `popup__feature--${element}`]
+      const feature = makeElement(featureClasses, 'li');
+      features.appendChild(feature);
+    });
+  } else {
+    features.classList.add('hidden');
+  }
+};
+
+// Создание блока с фотографиями
+const createPhotoElement = (card, offer) => {
+  const photos = card.querySelector('.popup__photos');
+  const photo = photos.querySelector('.popup__photo');
+  photos.removeChild(photo);
+
+  if (offer.photos) {
+    for (let i = 0; i < offer.photos.length; i++) {
+      photo.src = offer.photos[i];
+      photos.appendChild(photo.cloneNode(true));
+    }
+  } else {
+    photos.classList.add('hidden');
+  }
+};
+
+// Создание остальных блоков
+const createCardElement = (card, element, value, className) => {
+  const offerElement = card.querySelector(className)
+  element ? offerElement[value] = element : offerElement.classList.add('hidden');
+};
+
 const apartmentsListFragment = document.createDocumentFragment();
 
-// Проверка на пустое поле
-const safeRender = (el, value) => {
-  if (!value) {
-    el.style.display = 'none';
-  }
-}
+// Создание карточки
+const createCard = (apartments) => {
+  const cardPopup = document.querySelector('#card')
+    .content
+    .querySelector('.popup');
 
-// Генерация разметки похожих элементов
-apartmentsItem.forEach((apartments) => {
+  const card = cardPopup.cloneNode(true);
   const offer = apartments.offer;
-  const cardElement = cardPopup.cloneNode(true);
+  const author = apartments.author;
 
-  cardElement.querySelector('.popup__title').textContent = offer.title;
-  safeRender(cardElement.querySelector('.popup__title'), offer.title);
+  createCardElement(card, offer.title, 'textContent', '.popup__title' );
+  createCardElement(card, offer.address, 'textContent', '.popup__text--address' );
+  createPriceElement(card, offer);
+  createCardElement(card, apartmentsType[offer.type], 'textContent', '.popup__type' );
+  createCapacityElement(card, offer);
+  createTimeElement(card, offer);
+  createFeaturesElement(card, offer);
+  createCardElement(card, offer.description, 'textContent', '.popup__description' );
+  createPhotoElement(card, offer);
+  createCardElement(card, author.avatar, 'src', '.popup__avatar' );
 
-  cardElement.querySelector('.popup__text--address').textContent = offer.address;
-  safeRender(cardElement.querySelector('.popup__text--address'), offer.address);
+  apartmentsListFragment.appendChild(card);
+};
 
-  cardElement.querySelector('.popup__text--price').textContent = `${offer.price} ₽/ночь`;
-  safeRender(cardElement.querySelector('.popup__text--price'), `${offer.price} ₽/ночь`);
+const apartmentsItem = similarApartments.slice(0, 1);
 
-  const offerType = offer.type;
-  let popupType;
-  switch (offerType) {
-    case 'flat':
-      popupType = 'Квартира';
-      break;
-    case 'bungalow':
-      popupType = 'Бунгало';
-      break;
-    case 'house':
-      popupType = 'Дом';
-      break;
-    case 'palace':
-      popupType = 'Дворец';
-      break;
-  }
+apartmentsItem.forEach(offer => createCard(offer));
 
-  cardElement.querySelector('.popup__type').textContent = popupType;
-  safeRender(cardElement.querySelector('.popup__type'), popupType);
-
-  cardElement.querySelector('.popup__text--capacity').textContent = `${offer.rooms} комнаты для ${offer.guests} гостей`;
-  safeRender(cardElement.querySelector('.popup__text--capacity'), `${offer.rooms} комнаты для ${offer.guests} гостей`);
-
-  cardElement.querySelector('.popup__text--time').textContent = `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`;
-  safeRender(cardElement.querySelector('.popup__text--time'), `Заезд после ${offer.checkin}, выезд до ${offer.checkout}`);
-
-  const featuresList = cardElement.querySelector('.popup__features');
-  featuresList.innerHTML = '';
-  for (let i = 0; i < offer.features.length; i++) {
-    const featuresElement = document.createElement('li');
-    featuresElement.classList.add('popup__feature');
-    switch (offer.features[i]) {
-      case 'wifi':
-        featuresElement.classList.add('popup__feature--wifi');
-        break;
-      case 'dishwasher':
-        featuresElement.classList.add('popup__feature--dishwasher');
-        break;
-      case 'parking':
-        featuresElement.classList.add('popup__feature--parking');
-        break;
-      case 'washer':
-        featuresElement.classList.add('popup__feature--washer');
-        break;
-      case 'elevator':
-        featuresElement.classList.add('popup__feature--elevator');
-        break;
-      case 'conditioner':
-        featuresElement.classList.add('popup__feature--conditioner');
-        break;
-    }
-    featuresElement.textContent = offer.features[i];
-    featuresList.appendChild(featuresElement);
-    safeRender(featuresList, offer.features[i])
-  }
-
-  cardElement.querySelector('.popup__description').textContent = offer.description;
-  safeRender(cardElement.querySelector('.popup__description'), offer.description);
-
-  const popupPhotos = cardElement.querySelector('.popup__photos');
-  const popupPhoto = cardElement.querySelector('.popup__photo');
-  popupPhotos.innerHTML = '';
-
-  for (let i = 0; i < offer.photos.length; i++) {
-    popupPhoto.src = offer.photos[i];
-    popupPhotos.appendChild(popupPhoto.cloneNode(true))
-    safeRender(cardElement.querySelector('.popup__photos'), offer.photos[i]);
-  }
-
-  cardElement.querySelector('.popup__avatar').src = apartments.author.avatar;
-  safeRender(cardElement.querySelector('.popup__avatar'), apartments.author.avatar);
-
-  apartmentsListFragment.appendChild(cardElement);
-});
-
+const mapCanvas = document.querySelector('#map-canvas');
 const createSimilarApartment = mapCanvas.appendChild(apartmentsListFragment);
 
 export {createSimilarApartment};
-
