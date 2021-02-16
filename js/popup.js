@@ -99,16 +99,16 @@ const createCard = (apartments) => {
   const offer = apartments.offer;
   const author = apartments.author;
 
-  createCardElement(card, offer.title, 'textContent', '.popup__title' );
-  createCardElement(card, offer.address, 'textContent', '.popup__text--address' );
+  createCardElement(card, offer.title, 'textContent', '.popup__title');
+  createCardElement(card, offer.address, 'textContent', '.popup__text--address');
   createPriceElement(card, offer);
-  createCardElement(card, apartmentsType[offer.type], 'textContent', '.popup__type' );
+  createCardElement(card, apartmentsType[offer.type], 'textContent', '.popup__type');
   createCapacityElement(card, offer);
   createTimeElement(card, offer);
   createFeaturesElement(card, offer);
-  createCardElement(card, offer.description, 'textContent', '.popup__description' );
+  createCardElement(card, offer.description, 'textContent', '.popup__description');
   createPhotoElement(card, offer);
-  createCardElement(card, author.avatar, 'src', '.popup__avatar' );
+  createCardElement(card, author.avatar, 'src', '.popup__avatar');
 
   apartmentsListFragment.appendChild(card);
 };
