@@ -5,7 +5,7 @@ const APARTMENTS_TYPES = ['bungalow', 'flat', 'house', 'palace'];
 const APARTMENTS_CHECK_IN = ['12:00', '13:00', '14:00'];
 const APARTMENTS_CHECK_OUT = ['12:00', '13:00', '14:00'];
 const APARTMENTS_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-const APARTMENTS_IMAGES = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg]'];
+const APARTMENTS_IMAGES = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 const APARTMENTS_DESCRITIONS = ['Замечательное место для приема гостей и релакса', 'Изысканный уют', 'Великолепные апартаменты в центре', 'Подходит как туристам, так и бизнесменам', 'Апартаменты полностью укомплектованы и недавно отремонтированы', 'Разрешено заселяться с домашними питомцами', 'Двуспальная кровать', 'Выход окон на парк', 'Компактность, практичность и экономия', 'Квартира с стеклянной лестницей'];
 const APARTMENTS_TITLE = ['Живите красиво уже сегодня','Бесконечная элегантность' , 'Роскошь, достойная султана', 'Дом под старину', 'Для взыскательных хозяев', 'Каждый уголок квартиры освещен светом добра и любви', 'Милая, уютная квартирка в центре города', 'Уютное гнездышко для молодоженов', 'Комфортная студия', 'Роскошный пентхаус', 'Апартаменты, в котором проживала знаменитость'];
 
