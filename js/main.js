@@ -1,4 +1,2 @@
-import {similarApartments} from './data.js';
-import {createSimilarCard} from './popup.js';
-similarApartments;
-createSimilarCard();
+import {createAdvertisementCards} from './map.js';
+createAdvertisementCards();

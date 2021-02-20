@@ -1,4 +1,4 @@
-import {similarApartments} from './data.js';
+// import {similarApartments} from './data.js';
 
 // Проверка на наличие содержимого
 const renderElement = (content, el) => {
@@ -90,16 +90,16 @@ const createCard = ({author, offer}) => {
   return card;
 }
 
-// Создание карточек
-const createSimilarCard = () => {
-  const cards = similarApartments();
-  const mapCanvas = document.querySelector('#map-canvas');
+// // Создание карточек
+// const createSimilarCard = () => {
+//   const cards = similarApartments();
+//   const mapCanvas = document.querySelector('#map-canvas');
 
-  cards.forEach((card) => {
-    cardFragment.appendChild(createCard(card));
-  });
+//   cards.forEach((card) => {
+//     cardFragment.appendChild(createCard(card));
+//   });
 
-  mapCanvas.appendChild(cardFragment);
-}
+//   mapCanvas.appendChild(cardFragment);
+// }
 
-export {createSimilarCard};
+export {createCard};
