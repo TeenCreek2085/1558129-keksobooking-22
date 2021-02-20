@@ -60,7 +60,7 @@ mainPinMarker.on('move', onPinMove);
 const advertisementCards = similarApartments();
 
 const createAdvertisementCards = () => {
-  advertisementCards.forEach(({author, location, offer}) => {
+  advertisementCards.forEach(({author, offer, location}) => {
     const icon = L.icon({
       iconUrl: 'img/pin.svg',
       iconSize: [POINTER_SIZE, POINTER_SIZE],
