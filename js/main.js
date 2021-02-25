@@ -1,3 +1,4 @@
-// import './form.js';
 import {createAdvertisementCards} from './map.js';
-createAdvertisementCards();
+import {getData} from './api.js';
+
+getData(createAdvertisementCards);

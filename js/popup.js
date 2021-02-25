@@ -69,23 +69,23 @@ const createImageElement = (imagesList, el) => {
 }
 
 // Создание карточки
-const createCard = ({author, offer}) => {
+const createCard = (item) => {
   const cardPopup = document.querySelector('#card')
     .content
     .querySelector('.popup');
 
   const card = cardPopup.cloneNode(true);
 
-  renderElement(offer.title, card.querySelector('.popup__title'));
-  renderElement(offer.address, card.querySelector('.popup__text--address'));
-  renderElement(`${offer.price} ₽/ночь`, card.querySelector('.popup__text--price'));
-  renderElement(APARTMENTS_TYPE[offer.type], card.querySelector('.popup__type'));
-  renderElement(`${offer.rooms} комнаты для ${offer.guests} гостей`, card.querySelector('.popup__text--capacity'));
-  renderElement(`Заезд после ${offer.checkin} выезд до ${offer.checkout}`, card.querySelector('.popup__text--time'));
-  createFeaturesElement(offer.features, card.querySelector('.popup__features'));
-  renderElement(offer.description, card.querySelector('.popup__description'));
-  createImageElement(offer.photos, card.querySelector('.popup__photos'));
-  renderElement(author.avatar, card.querySelector('.popup__avatar'));
+  renderElement(item.offer.title, card.querySelector('.popup__title'));
+  renderElement(item.offer.address, card.querySelector('.popup__text--address'));
+  renderElement(`${item.offer.price} ₽/ночь`, card.querySelector('.popup__text--price'));
+  renderElement(APARTMENTS_TYPE[item.offer.type], card.querySelector('.popup__type'));
+  renderElement(`${item.offer.rooms} комнаты для ${item.offer.guests} гостей`, card.querySelector('.popup__text--capacity'));
+  renderElement(`Заезд после ${item.offer.checkin} выезд до ${item.offer.checkout}`, card.querySelector('.popup__text--time'));
+  createFeaturesElement(item.offer.features, card.querySelector('.popup__features'));
+  renderElement(item.offer.description, card.querySelector('.popup__description'));
+  createImageElement(item.offer.photos, card.querySelector('.popup__photos'));
+  renderElement(item.author.avatar, card.querySelector('.popup__avatar'));
 
   return card;
 }
