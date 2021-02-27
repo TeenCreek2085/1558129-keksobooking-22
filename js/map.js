@@ -1,6 +1,5 @@
 /* global L:readonly */
 
-import {similarApartments} from './data.js';
 import {createCard} from './popup.js';
 import {deactivateMapForm, activateMapForm, fillAddress} from './form.js';
 
@@ -57,17 +56,17 @@ const onPinMove = (evt) => {
 mainPinMarker.on('move', onPinMove);
 
 // Добавление карточек апартаментов на карту
-const advertisementCards = similarApartments();
-
-const createAdvertisementCards = () => {
-  advertisementCards.forEach(({author, offer, location}) => {
+const createAdvertisementCards = (data) => {
+  data.forEach((element) => {
     const icon = L.icon({
       iconUrl: 'img/pin.svg',
       iconSize: [POINTER_SIZE, POINTER_SIZE],
       iconAnchor: [POINTER_SIZE / 2, POINTER_SIZE],
     });
-    const lat = location.x;
-    const lng = location.y;
+
+    const lat = element.location.lat;
+    const lng = element.location.lng;
+
     const marker = L.marker(
       {
         lat,
@@ -81,7 +80,7 @@ const createAdvertisementCards = () => {
     marker
       .addTo(map)
       .bindPopup(
-        createCard({author, offer}),
+        createCard(element),
         {
           keepInView: true,
         },
@@ -89,4 +88,5 @@ const createAdvertisementCards = () => {
   });
 }
 
-export {createAdvertisementCards};
+export {createAdvertisementCards, mainPinMarker, STARTING_LATITUDE, STARTING_LONGITUDE};
+

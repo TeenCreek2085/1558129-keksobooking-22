@@ -1,6 +1,10 @@
 import {LOCATION_PRECISION} from './apartments.js';
+import {STARTING_LATITUDE, STARTING_LONGITUDE, mainPinMarker} from './map.js';
+import {isEscEvent, isMouseEvent} from './utils.js';
+import {sendData} from './api.js';
 
 const mapFilters = document.querySelector('.map__filters');
+const main = document.querySelector('main');
 const adForm = document.querySelector('.ad-form');
 const addressField = adForm.querySelector('#address');
 const typeField = adForm.querySelector('#type');
@@ -10,10 +14,19 @@ const checkOut = adForm.querySelector('#timeout');
 const formTitle = adForm.querySelector('#title');
 const roomNumber = adForm.querySelector('#room_number');
 const capacity = adForm.querySelector('#capacity');
+const resetButton = adForm.querySelector('.ad-form__reset');
+const errorMessage = document.querySelector('#error')
+  .content
+  .querySelector('.error');
+const successMessage = document.querySelector('#success')
+  .content
+  .querySelector('.success');
+const errorButton = errorMessage.querySelector('.error__button');
 
 const MIN_NAME_LENGTH = 30;
 const MAX_NAME_LENGTH = 100;
 const MAX_PRICE_PER_NIGHT = 1000000;
+const MAX_ROOM_NUMBERS = 100;
 
 const MIN_PRICES = {
   'bungalow': 0,
@@ -44,7 +57,8 @@ typeField.addEventListener('change', onTypeChange);
 
 // Валидация заголовка
 const checkFormTitle = () => {
-  const valueLength = formTitle.value.length;
+  const valueTrim = formTitle.value.trim();
+  const valueLength = valueTrim.length;
 
   if (valueLength < MIN_NAME_LENGTH) {
     formTitle.setCustomValidity(`Ещё ${MIN_NAME_LENGTH - valueLength} симв.`);
@@ -78,16 +92,14 @@ priceField.addEventListener('input', onPriceInput);
 
 // Валидация комнат и гостей
 const checkNumberRooms = () => {
-  const roomsValue = parseInt(roomNumber.value, 10);
-  const guestsValue = parseInt(capacity.value, 10);
-  // const roomsValue = roomNumber.value;
-  // const guestsValue = capacity.value;
+  const roomsValue = +roomNumber.value;
+  const guestsValue = +capacity.value;
 
   if (roomsValue < guestsValue) {
     capacity.setCustomValidity('Слишком много мест для гостей');
-  } else if (roomsValue !== 100 && guestsValue === 0) {
+  } else if (roomsValue !== MAX_ROOM_NUMBERS && guestsValue === 0) {
     capacity.setCustomValidity('Необходимо выбрать количество мест для гостей');
-  } else if (roomsValue === 100 && guestsValue !== 0) {
+  } else if (roomsValue === MAX_ROOM_NUMBERS && guestsValue !== 0) {
     capacity.setCustomValidity('Данный вариант не для гостей');
   } else {
     capacity.setCustomValidity('');
@@ -153,5 +165,64 @@ const activateMapForm = (startingAddress) => {
     activateForm();
   }
 }
+
+// Сброс введенных данных
+const resetForm = () => {
+  adForm.reset();
+  mapFilters.reset();
+  mainPinMarker.setLatLng({lat: STARTING_LATITUDE, lng: STARTING_LONGITUDE});
+  setTimeout(() => {
+    fillAddress({lat: STARTING_LATITUDE, long: STARTING_LONGITUDE});
+  }, 0);
+};
+
+resetButton.addEventListener('click', resetForm);
+
+// Показ сообщения при успешной отправке
+const getSuccessMessage = () => {
+  successMessage.style.zIndex = 1000;
+  main.append(successMessage);
+  resetForm();
+  document.addEventListener('keydown', closeSuccessMessage);
+  document.addEventListener('click', closeSuccessMessage);
+}
+
+const closeSuccessMessage = (evt) => {
+  if (isEscEvent(evt) || isMouseEvent(evt)) {
+    evt.preventDefault();
+    successMessage.remove();
+    document.removeEventListener('keydown', closeSuccessMessage);
+    document.removeEventListener('click', closeSuccessMessage);
+  }
+}
+
+// Показ сообщения при ошибк отправления
+const getErrorMessage = () => {
+  errorMessage.style.zIndex = 1000;
+  main.append(errorMessage);
+  document.addEventListener('keydown', closeErrorMessage);
+  document.addEventListener('click', closeErrorMessage);
+  errorButton.addEventListener('click', closeErrorMessage);
+}
+
+const closeErrorMessage = (evt) => {
+  if (isEscEvent(evt) || isMouseEvent(evt)) {
+    evt.preventDefault();
+    errorMessage.remove();
+    document.removeEventListener('keydown', closeErrorMessage);
+    document.removeEventListener('click', closeErrorMessage);
+    errorButton.removeEventListener('click', closeErrorMessage);
+  }
+}
+
+// Отправка формы
+const setFormSubmit = () => {
+  adForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    sendData(getSuccessMessage, getErrorMessage, new FormData(evt.target));
+  });
+};
+
+setFormSubmit();
 
 export {deactivateMapForm, activateMapForm, fillAddress};
