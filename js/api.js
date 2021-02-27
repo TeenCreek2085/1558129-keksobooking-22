@@ -9,7 +9,7 @@ const getData = (onSuccess) => {
       if (response.ok) {
         return response.json();
       } else {
-        showAlert(ERROR_MESSAGE);
+        throw new Error();
       }
     })
     .then((data) => {

@@ -57,8 +57,8 @@ typeField.addEventListener('change', onTypeChange);
 
 // Валидация заголовка
 const checkFormTitle = () => {
-  const valueLength = formTitle.value.length;
-  valueLength.trim();
+  const valueTrim = formTitle.value.trim();
+  const valueLength = valueTrim.length;
 
   if (valueLength < MIN_NAME_LENGTH) {
     formTitle.setCustomValidity(`Ещё ${MIN_NAME_LENGTH - valueLength} симв.`);
