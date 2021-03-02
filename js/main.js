@@ -1,4 +1,10 @@
 import {createAdvertisementCards} from './map.js';
 import {getData} from './api.js';
+import {setFilterChange} from './filter.js';
 
-getData(createAdvertisementCards);
+getData((data) => {
+  createAdvertisementCards(data);
+  setFilterChange((
+    () => createAdvertisementCards(data)
+  ));
+});
