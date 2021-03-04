@@ -1,6 +1,6 @@
 /* global L:readonly */
-
 import {createCard} from './popup.js';
+import {filterAdverts} from './filter.js';
 import {deactivateMapForm, activateMapForm, fillAddress} from './form.js';
 
 const STARTING_LATITUDE = 35.683359;
@@ -8,6 +8,7 @@ const STARTING_LONGITUDE = 139.749919;
 const STARING_ZOOM = 13;
 const MAIN_POINTER_SIZE = 45;
 const POINTER_SIZE = 40;
+const APARTMENTS_COUNT = 10;
 
 deactivateMapForm();
 
@@ -55,37 +56,42 @@ const onPinMove = (evt) => {
 
 mainPinMarker.on('move', onPinMove);
 
+const adLayer = L.layerGroup().addTo(map);
+
 // Добавление карточек апартаментов на карту
 const createAdvertisementCards = (data) => {
-  data.forEach((element) => {
-    const icon = L.icon({
-      iconUrl: 'img/pin.svg',
-      iconSize: [POINTER_SIZE, POINTER_SIZE],
-      iconAnchor: [POINTER_SIZE / 2, POINTER_SIZE],
-    });
+  adLayer.clearLayers();
+  filterAdverts(data)
+    .slice(0, APARTMENTS_COUNT)
+    .forEach((element) => {
+      const icon = L.icon({
+        iconUrl: 'img/pin.svg',
+        iconSize: [POINTER_SIZE, POINTER_SIZE],
+        iconAnchor: [POINTER_SIZE / 2, POINTER_SIZE],
+      });
 
-    const lat = element.location.lat;
-    const lng = element.location.lng;
+      const lat = element.location.lat;
+      const lng = element.location.lng;
 
-    const marker = L.marker(
-      {
-        lat,
-        lng,
-      },
-      {
-        icon,
-      },
-    );
-
-    marker
-      .addTo(map)
-      .bindPopup(
-        createCard(element),
+      const marker = L.marker(
         {
-          keepInView: true,
+          lat,
+          lng,
+        },
+        {
+          icon,
         },
       );
-  });
+
+      marker
+        .addTo(adLayer)
+        .bindPopup(
+          createCard(element),
+          {
+            keepInView: true,
+          },
+        );
+    });
 }
 
 export {createAdvertisementCards, mainPinMarker, STARTING_LATITUDE, STARTING_LONGITUDE};

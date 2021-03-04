@@ -168,8 +168,10 @@ const activateMapForm = (startingAddress) => {
 
 // Сброс введенных данных
 const resetForm = () => {
+  const resetPins = new Event('change');
   adForm.reset();
   mapFilters.reset();
+  mapFilters.dispatchEvent(resetPins);
   mainPinMarker.setLatLng({lat: STARTING_LATITUDE, lng: STARTING_LONGITUDE});
   setTimeout(() => {
     fillAddress({lat: STARTING_LATITUDE, long: STARTING_LONGITUDE});
