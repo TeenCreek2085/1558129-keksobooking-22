@@ -8,8 +8,9 @@ const featuresFilter = mapFilter.querySelector('#housing-features');
 const PRICES = {
   'low': 10000,
   'high': 50000,
-  'any': 0,
 }
+
+const ANY_VALUE = 'any';
 
 // Фильтрация по цене
 const getPriceFilter = (data) => {
@@ -21,7 +22,7 @@ const getPriceFilter = (data) => {
     case 'high':
       return data.offer.price > PRICES[priceFilter.value];
     default:
-      return PRICES;
+      return true;
   }
 };
 
@@ -35,11 +36,16 @@ const getFeaturesFilter = (data) => {
 };
 
 // Фильтрация по остальным параметрам
+const checkedFilter = (element, content) => {
+  return element.value == ANY_VALUE || element.value == content;
+}
+
+// Инициализация параметров
 const getFilter = (data) => {
-  const type = typeFilter.value === 'any' || typeFilter.value === data.offer.type;
+  const type = checkedFilter(typeFilter, data.offer.type);
   const price = getPriceFilter(data);
-  const rooms = roomsFilter.value === 'any' || +roomsFilter.value === data.offer.rooms;
-  const guests = guestsFilter.value === 'any' || +guestsFilter.value === data.offer.guests;
+  const rooms = checkedFilter(roomsFilter, data.offer.rooms);
+  const guests = checkedFilter(guestsFilter, data.offer.guests);
   const features = getFeaturesFilter(data);
 
   return type && price && rooms && guests && features;
