@@ -2,6 +2,7 @@ import {LOCATION_PRECISION} from './apartments.js';
 import {STARTING_LATITUDE, STARTING_LONGITUDE, mainPinMarker} from './map.js';
 import {isEscEvent, isMouseEvent} from './utils.js';
 import {sendData} from './api.js';
+import {cleanPhotos} from './avatar.js';
 
 const mapFilters = document.querySelector('.map__filters');
 const main = document.querySelector('main');
@@ -171,6 +172,7 @@ const resetForm = () => {
   const resetPins = new Event('change');
   adForm.reset();
   mapFilters.reset();
+  cleanPhotos();
   mapFilters.dispatchEvent(resetPins);
   mainPinMarker.setLatLng({lat: STARTING_LATITUDE, lng: STARTING_LONGITUDE});
   setTimeout(() => {
