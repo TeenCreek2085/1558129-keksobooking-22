@@ -1,8 +1,20 @@
-import {LOCATION_PRECISION} from './apartments.js';
 import {STARTING_LATITUDE, STARTING_LONGITUDE, mainPinMarker} from './map.js';
 import {isEscEvent, isMouseEvent} from './utils.js';
 import {sendData} from './api.js';
 import {cleanPhotos} from './avatar.js';
+
+const MIN_NAME_LENGTH = 30;
+const MAX_NAME_LENGTH = 100;
+const MAX_PRICE_PER_NIGHT = 1000000;
+const MAX_ROOM_NUMBERS = 100;
+const LOCATION_PRECISION = 5;
+
+const MIN_PRICES = {
+  'bungalow': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000,
+}
 
 const mapFilters = document.querySelector('.map__filters');
 const main = document.querySelector('main');
@@ -23,18 +35,6 @@ const successMessage = document.querySelector('#success')
   .content
   .querySelector('.success');
 const errorButton = errorMessage.querySelector('.error__button');
-
-const MIN_NAME_LENGTH = 30;
-const MAX_NAME_LENGTH = 100;
-const MAX_PRICE_PER_NIGHT = 1000000;
-const MAX_ROOM_NUMBERS = 100;
-
-const MIN_PRICES = {
-  'bungalow': 0,
-  'flat': 1000,
-  'house': 5000,
-  'palace': 10000,
-}
 
 // Логика обработки пользовательского ввода для полей
 const onCheckInChange = () => {
@@ -57,7 +57,7 @@ checkOut.addEventListener('change', onCheckOutChange);
 typeField.addEventListener('change', onTypeChange);
 
 // Валидация заголовка
-const checkFormTitle = () => {
+const onCheckFormTitle = () => {
   const valueTrim = formTitle.value.trim();
   const valueLength = valueTrim.length;
 
@@ -72,7 +72,7 @@ const checkFormTitle = () => {
   formTitle.reportValidity();
 }
 
-formTitle.addEventListener('input', checkFormTitle);
+formTitle.addEventListener('input', onCheckFormTitle);
 
 // Валидация цены
 const onPriceInput = () => {
@@ -92,7 +92,7 @@ const onPriceInput = () => {
 priceField.addEventListener('input', onPriceInput);
 
 // Валидация комнат и гостей
-const checkNumberRooms = () => {
+const onCheckNumberRooms = () => {
   const roomsValue = +roomNumber.value;
   const guestsValue = +capacity.value;
 
@@ -107,13 +107,13 @@ const checkNumberRooms = () => {
   }
 };
 
-capacity.addEventListener('change', checkNumberRooms);
+capacity.addEventListener('change', onCheckNumberRooms);
 
-roomNumber.addEventListener('change', checkNumberRooms);
+roomNumber.addEventListener('change', onCheckNumberRooms);
 
 // Инициализация проверки
 const activateForm = () => {
-  checkNumberRooms();
+  onCheckNumberRooms();
   onTypeChange();
   onCheckInChange();
   onCheckOutChange();
@@ -168,7 +168,7 @@ const activateMapForm = (startingAddress) => {
 }
 
 // Сброс введенных данных
-const resetForm = () => {
+const onResetForm = () => {
   const resetPins = new Event('change');
   adForm.reset();
   mapFilters.reset();
@@ -180,23 +180,23 @@ const resetForm = () => {
   }, 0);
 };
 
-resetButton.addEventListener('click', resetForm);
+resetButton.addEventListener('click', onResetForm);
 
 // Показ сообщения при успешной отправке
 const getSuccessMessage = () => {
   successMessage.style.zIndex = 1000;
   main.append(successMessage);
-  resetForm();
-  document.addEventListener('keydown', closeSuccessMessage);
-  document.addEventListener('click', closeSuccessMessage);
+  onResetForm();
+  document.addEventListener('keydown', onCloseSuccessMessage);
+  document.addEventListener('click', onCloseSuccessMessage);
 }
 
-const closeSuccessMessage = (evt) => {
+const onCloseSuccessMessage = (evt) => {
   if (isEscEvent(evt) || isMouseEvent(evt)) {
     evt.preventDefault();
     successMessage.remove();
-    document.removeEventListener('keydown', closeSuccessMessage);
-    document.removeEventListener('click', closeSuccessMessage);
+    document.removeEventListener('keydown', onCloseSuccessMessage);
+    document.removeEventListener('click', onCloseSuccessMessage);
   }
 }
 
@@ -204,18 +204,18 @@ const closeSuccessMessage = (evt) => {
 const getErrorMessage = () => {
   errorMessage.style.zIndex = 1000;
   main.append(errorMessage);
-  document.addEventListener('keydown', closeErrorMessage);
-  document.addEventListener('click', closeErrorMessage);
-  errorButton.addEventListener('click', closeErrorMessage);
+  document.addEventListener('keydown', onCloseErrorMessage);
+  document.addEventListener('click', onCloseErrorMessage);
+  errorButton.addEventListener('click', onCloseErrorMessage);
 }
 
-const closeErrorMessage = (evt) => {
+const onCloseErrorMessage = (evt) => {
   if (isEscEvent(evt) || isMouseEvent(evt)) {
     evt.preventDefault();
     errorMessage.remove();
-    document.removeEventListener('keydown', closeErrorMessage);
-    document.removeEventListener('click', closeErrorMessage);
-    errorButton.removeEventListener('click', closeErrorMessage);
+    document.removeEventListener('keydown', onCloseErrorMessage);
+    document.removeEventListener('click', onCloseErrorMessage);
+    errorButton.removeEventListener('click', onCloseErrorMessage);
   }
 }
 

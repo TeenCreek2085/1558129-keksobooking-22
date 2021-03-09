@@ -1,4 +1,10 @@
-// import {similarApartments} from './data.js';
+// Блок с типом апартаментов
+const APARTMENTS_TYPE = {
+  'flat':  'Квартира',
+  'bungalow': 'Бунгало',
+  'house': 'Дом',
+  'palace': 'Дворец',
+};
 
 // Проверка на наличие содержимого
 const renderElement = (content, el) => {
@@ -25,14 +31,6 @@ const renderElement = (content, el) => {
       }
     }
   }
-};
-
-// Блок с типом апартаментов
-const APARTMENTS_TYPE = {
-  'flat':  'Квартира',
-  'bungalow': 'Бунгало',
-  'house': 'Дом',
-  'palace': 'Дворец',
 };
 
 // Создание блока с преимуществами
@@ -89,17 +87,5 @@ const createCard = (item) => {
 
   return card;
 }
-
-// // Создание карточек
-// const createSimilarCard = () => {
-//   const cards = similarApartments();
-//   const mapCanvas = document.querySelector('#map-canvas');
-
-//   cards.forEach((card) => {
-//     cardFragment.appendChild(createCard(card));
-//   });
-
-//   mapCanvas.appendChild(cardFragment);
-// }
 
 export {createCard};
