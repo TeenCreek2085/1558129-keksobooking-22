@@ -1,16 +1,16 @@
-const mapFilter = document.querySelector('.map__filters');
-const typeFilter = mapFilter.querySelector('#housing-type');
-const priceFilter = mapFilter.querySelector('#housing-price');
-const roomsFilter = mapFilter.querySelector('#housing-rooms');
-const guestsFilter = mapFilter.querySelector('#housing-guests');
-const featuresFilter = mapFilter.querySelector('#housing-features');
-
 const PRICES = {
   'low': 10000,
   'high': 50000,
 }
 
 const ANY_VALUE = 'any';
+
+const mapFilter = document.querySelector('.map__filters');
+const typeFilter = mapFilter.querySelector('#housing-type');
+const priceFilter = mapFilter.querySelector('#housing-price');
+const roomsFilter = mapFilter.querySelector('#housing-rooms');
+const guestsFilter = mapFilter.querySelector('#housing-guests');
+const featuresFilter = mapFilter.querySelector('#housing-features');
 
 // Фильтрация по цене
 const getPriceFilter = (data) => {
@@ -35,17 +35,22 @@ const getFeaturesFilter = (data) => {
   });
 };
 
-// Фильтрация по остальным параметрам
-const checkedFilter = (element, content) => {
-  return element.value == ANY_VALUE || element.value == content;
+// Фильтрация по типу
+const getTypeFilter = (element, content) => {
+  return element.value === ANY_VALUE || element.value === content;
+}
+
+// Фильтрация по количеству комнат и гостей
+const getCapacityFilter = (element, content) => {
+  return element.value === ANY_VALUE || +element.value === content;
 }
 
 // Инициализация параметров
 const getFilter = (data) => {
-  const type = checkedFilter(typeFilter, data.offer.type);
+  const type = getTypeFilter(typeFilter, data.offer.type);
   const price = getPriceFilter(data);
-  const rooms = checkedFilter(roomsFilter, data.offer.rooms);
-  const guests = checkedFilter(guestsFilter, data.offer.guests);
+  const rooms = getCapacityFilter(roomsFilter, data.offer.rooms);
+  const guests = getCapacityFilter(guestsFilter, data.offer.guests);
   const features = getFeaturesFilter(data);
 
   return type && price && rooms && guests && features;
@@ -58,9 +63,7 @@ const filterAdverts = (data) => {
 
 // Активация фильтров
 const setFilterChange = (cb) => {
-  mapFilter.addEventListener('change', () => {
-    cb();
-  });
-};
+  mapFilter.addEventListener('change', cb);
+}
 
 export {setFilterChange, filterAdverts};
