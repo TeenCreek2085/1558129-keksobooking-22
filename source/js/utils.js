@@ -28,8 +28,4 @@ const isEscEvent = (evt) => {
   return evt.key === ('Escape' || 'Esc');
 };
 
-const isMouseEvent = (evt) => {
-  return evt.type === 'click';
-};
-
-export {showAlert, isEscEvent, isMouseEvent};
+export {showAlert, isEscEvent};

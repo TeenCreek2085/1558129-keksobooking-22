@@ -35,22 +35,20 @@ const getFeaturesFilter = (data) => {
   });
 };
 
-// Фильтрация по типу
-const getTypeFilter = (element, content) => {
-  return element.value === ANY_VALUE || element.value === content;
-}
-
-// Фильтрация по количеству комнат и гостей
-const getCapacityFilter = (element, content) => {
+// Фильтрация по остальным параметрам
+const getOtherFilters = (element, content) => {
+  if (typeof content === 'string') {
+    return element.value === ANY_VALUE || element.value === content;
+  }
   return element.value === ANY_VALUE || +element.value === content;
 }
 
 // Инициализация параметров
 const getFilter = (data) => {
-  const type = getTypeFilter(typeFilter, data.offer.type);
+  const type = getOtherFilters(typeFilter, data.offer.type);
   const price = getPriceFilter(data);
-  const rooms = getCapacityFilter(roomsFilter, data.offer.rooms);
-  const guests = getCapacityFilter(guestsFilter, data.offer.guests);
+  const rooms = getOtherFilters(roomsFilter, data.offer.rooms);
+  const guests = getOtherFilters(guestsFilter, data.offer.guests);
   const features = getFeaturesFilter(data);
 
   return type && price && rooms && guests && features;

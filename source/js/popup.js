@@ -24,11 +24,7 @@ const renderElement = (content, el) => {
       break;
     }
     default: {
-      if (el.tagName === 'IMG') {
-        el.src = content;
-      } else {
-        el.textContent = content;
-      }
+      el.tagName === 'IMG' ? el.src = content : el.textContent = content;
     }
   }
 };

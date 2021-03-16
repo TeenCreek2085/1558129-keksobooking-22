@@ -1,5 +1,5 @@
 import {STARTING_LATITUDE, STARTING_LONGITUDE, mainPinMarker} from './map.js';
-import {isEscEvent, isMouseEvent} from './utils.js';
+import {isEscEvent} from './utils.js';
 import {sendData} from './api.js';
 import {cleanPhotos} from './avatar.js';
 
@@ -119,13 +119,8 @@ const activateForm = () => {
   onCheckOutChange();
 }
 
-// Сценарий переключения режимов карты между неактивным и активным
-const deactivateMapForm = () => {
-  adForm.classList.add('ad-form--disabled');
-  adForm.querySelectorAll('fieldset').forEach((fieldset) => {
-    fieldset.setAttribute('disabled', 'disabled');
-  });
-
+// Сделать фильтры неактивными
+const assignInactiveStatus = () => {
   mapFilters.classList.add('map__filters--disabled');
   mapFilters.querySelectorAll('.map__filter').forEach((filter) => {
     filter.setAttribute('disabled', 'disabled');
@@ -134,6 +129,28 @@ const deactivateMapForm = () => {
   mapFilters.querySelectorAll('.map__features').forEach((feature) => {
     feature.setAttribute('disabled', 'disabled');
   })
+}
+
+// Сделать фильтры активными
+const assignActiveStatus = () => {
+  mapFilters.classList.remove('map__filters--disabled');
+  mapFilters.querySelectorAll('.map__filter').forEach((filter) => {
+    filter.removeAttribute('disabled');
+  });
+
+  mapFilters.querySelectorAll('.map__features').forEach((feature) => {
+    feature.removeAttribute('disabled');
+  });
+}
+
+// Сценарий переключения режимов карты между неактивным и активным
+const deactivateMapForm = () => {
+  adForm.classList.add('ad-form--disabled');
+  adForm.querySelectorAll('fieldset').forEach((fieldset) => {
+    fieldset.setAttribute('disabled', 'disabled');
+  });
+
+  assignInactiveStatus();
 }
 
 const fillAddress = ({lat, long}) => {
@@ -150,14 +167,7 @@ const activateMapForm = (startingAddress) => {
       fieldset.removeAttribute('disabled');
     });
 
-    mapFilters.classList.remove('map__filters--disabled');
-    mapFilters.querySelectorAll('.map__filter').forEach((filter) => {
-      filter.removeAttribute('disabled');
-    });
-
-    mapFilters.querySelectorAll('.map__features').forEach((feature) => {
-      feature.removeAttribute('disabled');
-    });
+    assignActiveStatus();
 
     addressField.setAttribute('readonly', 'readonly');
 
@@ -182,42 +192,53 @@ const onResetForm = () => {
 
 resetButton.addEventListener('click', onResetForm);
 
-// Показ сообщения при успешной отправке
+// Обработчик для закрытия окна при нажатии ESC
+const onCloseKeydown = (evt) => {
+  if (isEscEvent(evt)) {
+    evt.preventDefault();
+    setPopupClose();
+  }
+}
+
+// Удаление/Добавление обработчика
+const setPopupClose = () => {
+  if (main.contains(successMessage)) {
+    successMessage.remove();
+  }
+
+  if (main.contains(errorMessage)) {
+    errorMessage.remove();
+  }
+
+  document.removeEventListener('keydown', onCloseKeydown);
+};
+
+const setPopupSuccessOpen = () => {
+  main.append(successMessage);
+  document.addEventListener('keydown', onCloseKeydown);
+};
+
+const setPopupErrorOpen = () => {
+  main.append(errorMessage);
+  document.addEventListener('keydown', onCloseKeydown);
+};
+
+// Показ сообщения при отправке
 const getSuccessMessage = () => {
   successMessage.style.zIndex = 1000;
-  main.append(successMessage);
   onResetForm();
-  document.addEventListener('keydown', onCloseSuccessMessage);
-  document.addEventListener('click', onCloseSuccessMessage);
+  setPopupSuccessOpen();
 }
 
-const onCloseSuccessMessage = (evt) => {
-  if (isEscEvent(evt) || isMouseEvent(evt)) {
-    evt.preventDefault();
-    successMessage.remove();
-    document.removeEventListener('keydown', onCloseSuccessMessage);
-    document.removeEventListener('click', onCloseSuccessMessage);
-  }
-}
-
-// Показ сообщения при ошибк отправления
 const getErrorMessage = () => {
   errorMessage.style.zIndex = 1000;
-  main.append(errorMessage);
-  document.addEventListener('keydown', onCloseErrorMessage);
-  document.addEventListener('click', onCloseErrorMessage);
-  errorButton.addEventListener('click', onCloseErrorMessage);
+  setPopupErrorOpen();
 }
 
-const onCloseErrorMessage = (evt) => {
-  if (isEscEvent(evt) || isMouseEvent(evt)) {
-    evt.preventDefault();
-    errorMessage.remove();
-    document.removeEventListener('keydown', onCloseErrorMessage);
-    document.removeEventListener('click', onCloseErrorMessage);
-    errorButton.removeEventListener('click', onCloseErrorMessage);
-  }
-}
+// Добавление обработчика при клике
+document.addEventListener('click', setPopupClose);
+
+errorButton.addEventListener('click', setPopupClose);
 
 // Отправка формы
 const setFormSubmit = () => {
